@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
-    app: './App.jsx',
+    app: ['./App.jsx'],
     vendor: ['react','react-dom','whatwg-fetch']
 
   },
@@ -20,6 +20,15 @@ module.exports = {
       minChunks: Infinity
     })
   ],
+  devServer:{
+    port: 8000,
+    contentBase: 'static',
+    proxy:{
+      '/api/*': {
+        target: 'http://localhost:3000'
+      }
+    }
+  },
   module: {
     rules: [
         {
