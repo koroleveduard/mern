@@ -1,0 +1,35 @@
+const path = require('path');
+const webpack = require('webpack');
+
+module.exports = {
+  context: path.resolve(__dirname, './src'),
+  entry: {
+    app: './App.jsx',
+    vendor: ['react','react-dom','whatwg-fetch']
+
+  },
+  output: {
+    path: path.resolve(__dirname, './static'),
+    filename: 'app.bundle.js',
+  },
+  devtool: 'cheap-module-eval-source-map',
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      filename: "vendor.bundle.js",
+      minChunks: Infinity
+    })
+  ],
+  module: {
+    rules: [
+        {
+            test: /\.jsx$/,
+            exclude: [/node_modules/],
+            use: [ {
+                loader: 'babel-loader',
+                options: { presets: ['es2015', 'react'] }
+            }],
+        },
+    ],
+  },
+};
