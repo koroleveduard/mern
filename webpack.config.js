@@ -5,7 +5,7 @@ module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
     app: ['./App.jsx'],
-    vendor: ['react','react-dom','whatwg-fetch']
+    vendor: ['react','react-dom','whatwg-fetch','react-router']
 
   },
   output: {
@@ -27,7 +27,8 @@ module.exports = {
       '/api/*': {
         target: 'http://localhost:3000'
       }
-    }
+    },
+    historyApiFallback: true,
   },
   module: {
     rules: [
