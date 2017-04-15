@@ -16,11 +16,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "body-parser": "^1.17.1",
+    "bootstrap": "^3.3.7",
     "express": "^4.15.2",
     "mongodb": "^2.2.25",
-    "source-map-support": "^0.4.14",
-    "babel-polyfill": "^6.23.0"
+    "source-map-support": "^0.4.14"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
@@ -30,8 +31,10 @@
     "babel-register": "^6.24.1",
     "nodemon": "^1.11.0",
     "react": "^15.5.4",
+    "react-bootstrap": "^0.30.8",
     "react-dom": "^15.5.4",
     "react-router": "^2.7.0",
+    "react-router-bootstrap": "^0.23.1",
     "webpack": "^2.3.3",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.2",

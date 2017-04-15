@@ -1,8 +1,10 @@
 import React from 'react';
 import 'whatwg-fetch';
+import { Link } from 'react-router';
+import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+
 import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
-import { Link } from 'react-router';
 
 class IssueRow extends React.Component{
 	constructor(){
@@ -24,7 +26,11 @@ class IssueRow extends React.Component{
 		        <td>{issue.effort}</td>
 		        <td>{issue.completionDate ? issue.completionDate.toDateString() : ''}</td>
 		        <td>{issue.title}</td>
-		        <td><button onClick={this.onDeleteClick}>Delete</button></td>
+		        <td>
+		        	<Button bsSize="xsmall" onClick={this.onDeleteClick}>
+		        		<Glyphicon glyph="trash" />
+		        	</Button>
+		        </td>
 			</tr>
 		);
 	}
@@ -40,23 +46,23 @@ class IssueTable extends React.Component{
 		const borderedStyle = {border: "1px solid silver", padding: 6};
 		const issueRows = this.props.issues.map(issue => <IssueRow key={issue._id} issue={issue} deleteIssue={this.props.deleteIssue}/>);
 		return(
-			<table style={{borderCollapse: "collapse"}}>
+			<Table bordered condensed hover responsive>
 				<thead>
 					<tr>
 			            <th>Id</th>
-			            <th>Status</th>
-			            <th>Owner</th>
-			            <th>Created</th>
-			            <th>Effort</th>
-			            <th>Completion Date</th>
-			            <th>Title</th>
+			            <th>Статус</th>
+			            <th>Автор</th>
+			            <th>Создана</th>
+			            <th>Попытка</th>
+			            <th>Дата завершения</th>
+			            <th>Название</th>
 			            <th></th>
 			         </tr>
 				</thead>
 				<tbody>
 					{issueRows}
 				</tbody>
-			</table>
+			</Table>
 		);
 	}
 }
@@ -156,8 +162,9 @@ export default class IssueList extends React.Component{
 	render(){
 		return(
 			<div>
-				<IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query}/>
-				<hr />
+				<Panel collapsible header="Фильтр">
+					<IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query}/>
+				</Panel>
 		        <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue}/>
 		        <hr />
 		        <IssueAdd createIssue={this.createIssue}/>	

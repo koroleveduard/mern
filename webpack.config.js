@@ -5,7 +5,7 @@ module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
     app: ['./App.jsx'],
-    vendor: ['react','react-dom','whatwg-fetch','react-router']
+    vendor: ['react','react-dom','whatwg-fetch','react-router','react-bootstrap','react-router-bootstrap']
 
   },
   output: {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { Col, Row, FormGroup, FormControl, ControlLabel, InputGroup, ButtonToolbar, Button } from 'react-bootstrap';
 
 export default class IssueFilter extends React.Component{
 	constructor(props){
@@ -68,25 +69,45 @@ export default class IssueFilter extends React.Component{
 
 	render(){
 		return(
-		<div>
-			Status:
-			<select value="{this.state.status}" onChange={this.onChangeStatus}>
-				<option value="">(Any)</option>
-		        <option value="New">New</option>
-		        <option value="Open">Open</option>
-		        <option value="Assigned">Assigned</option>
-		        <option value="Fixed">Fixed</option>
-		        <option value="Verified">Verified</option>
-		        <option value="Closed">Closed</option>
-			</select>
-			&nbsp;Effort between:
-			<input size={5} value={this.state.effort_gte} onChange={this.onChangeEffortGte} />
-			&nbsp;-&nbsp;
-			<input size={5} value={this.state.effort_lte} onChange={this.onChangeEffortLte} />
-			<button onClick={this.applyFilter}>Apply</button>
-			<button onClick={this.resetFilter} disabled={!this.state.changed}>Reset</button>
-      		<button onClick={this.clearFilter}>Clear</button>
-		</div>
+		<Row>
+			<Col xs={6} sm={4} md={4} lg={3}>
+				<FormGroup>
+					<ControlLabel>Статус</ControlLabel>
+						<FormControl
+						componentClass="select" value={this.state.status}
+						onChange={this.onChangeStatus}
+						>
+						<option value="">(Любой)</option>
+				        <option value="New">Новые</option>
+				        <option value="Open">Открытые</option>
+				        <option value="Assigned">Назначеные</option>
+				        <option value="Fixed">Решенные</option>
+				        <option value="Verified">Проверенные</option>
+				        <option value="Closed">Закрытые</option>
+						</FormControl>
+				</FormGroup>
+			</Col>
+			<Col xs={6} sm={4} md={4} lg={3}>
+			<FormGroup>
+				<ControlLabel>Попытки</ControlLabel>
+				<InputGroup>
+				<FormControl value={this.state.effort_gte} onChange={this.onChangeEffortGte} />
+				<InputGroup.Addon>-</InputGroup.Addon>
+				<FormControl value={this.state.effort_lte} onChange={this.onChangeEffortLte} />
+				</InputGroup>
+			</FormGroup>
+			</Col>
+			<Col xs={6} sm={4} md={4} lg={3}>
+			<FormGroup>
+			<ControlLabel>&nbsp;</ControlLabel>
+			<ButtonToolbar>
+			<Button bsStyle="primary" onClick={this.applyFilter}>Применить</Button>
+			<Button onClick={this.resetFilter} disabled={!this.state.changed}>Сбросить</Button>
+			<Button onClick={this.clearFilter}>Очистить</Button>
+			</ButtonToolbar>
+			</FormGroup>
+			</Col>
+		</Row>
 		);
 	}
 }
