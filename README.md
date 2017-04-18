@@ -21,4 +21,4 @@ webpack
 ------------
 
 1. npm i
-2. npm run start dev-all
+2. npm run dev-all
