@@ -2,11 +2,12 @@ Task tracker
 ============================
 
 Использовался:
-react
-react-router
-nodejs
-express
-webpack
+- react
+- react-router
+- nodejs
+- express
+- webpack
+- mongo
 
 ------------
 
@@ -20,5 +21,6 @@ webpack
 Установка
 ------------
 
-1. npm i
-2. npm run dev-all
+1. npm i - установка зависимостей
+2. mongo scripts/init.mongo.js - инициализация бд
+3. npm run dev-all - запуск сервера
