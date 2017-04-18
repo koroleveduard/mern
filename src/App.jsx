@@ -38,7 +38,7 @@ const App = (props) => (
 	    <div className="container-fluid">
 	      {props.children}
 	    <hr/>
-	    <h5><small>Full source code available at this <a href="https://github.com/vasansr/pro-mern-stack">GitHub repository</a>.</small></h5>
+	    <h5><small>Full source code available at this <a href="https://github.com/koroleveduard/mern">GitHub repository</a>.</small></h5>
 	    </div>
 	</div>
 )
