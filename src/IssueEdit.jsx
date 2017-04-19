@@ -2,7 +2,7 @@ import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router';
 import { FormGroup, FormControl, ControlLabel, ButtonToolbar, Button,
-  Panel, Form, Col } from 'react-bootstrap';
+  Panel, Form, Col, Alert } from 'react-bootstrap';
 import NumInput from './NumInput.jsx';
 import DateInput from './DateInput.jsx';
 
@@ -21,14 +21,18 @@ export default class IssueEdit extends React.Component
 		        created: null,
 		    },
 		    invalidFields: {},
+		    showingValidation: false
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onValidityChange = this.onValidityChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.dismissValidation = this.dismissValidation.bind(this);
+		this.showValidation = this.showValidation.bind(this);
 	}
 
 	onSubmit(event) {
 		event.preventDefault();
+		this.showValidation();
 		if (Object.keys(this.state.invalidFields).length !== 0) {
 			return;
 		}
@@ -113,9 +117,23 @@ export default class IssueEdit extends React.Component
 		});
 	}
 
+	showValidation() {
+    	this.setState({ showingValidation: true });
+  	}
+
+	dismissValidation() {
+    	this.setState({ showingValidation: false });
+  	}
+
 	render() {
 		const issue = this.state.issue;
-		const validationMessage = Object.keys(this.state.invalidFields).length === 0 ? null : (<div className="error">Пожалуйста, заполняйте все обязательные поля корректно</div>);
+		let validationMessage = null;
+		if (Object.keys(this.state.invalidFields).length !== 0 && this.state.showingValidation) {
+      		validationMessage = (
+		        <Alert bsStyle="danger" onDismiss={this.dismissValidation}>
+		          Пожалуйста, заполните корретно все необходимые поля.
+		        </Alert>);
+    	}
 		return (
 			<Panel header="Редактировать задачу">
 				<Form horizontal onSubmit={this.onSubmit}>
@@ -188,9 +206,11 @@ export default class IssueEdit extends React.Component
               </ButtonToolbar>
             </Col>
           </FormGroup>
+          <FormGroup>
+            <Col smOffset={3} sm={9}>{validationMessage}</Col>
+          </FormGroup>
           <Link to="/issues">Вернуться назад</Link>
         </Form>
-        {validationMessage}
 			</Panel>
 		);
 	}
