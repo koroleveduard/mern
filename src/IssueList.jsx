@@ -5,6 +5,7 @@ import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 
 import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
+import Toast from './Toast.jsx';
 
 class IssueRow extends React.Component{
 	constructor(){
@@ -76,10 +77,17 @@ IssueTable.propTypes = {
 export default class IssueList extends React.Component{
 	constructor(){
 		super();
-		this.state = { issues: [] };
+		this.state = { 
+			issues: [],
+			toastVisible: false, 
+			toastMessage: '', 
+			toastType: 'success', 
+		};
 		this.createIssue = this.createIssue.bind(this);
 		this.setFilter = this.setFilter.bind(this);
 		this.deleteIssue = this.deleteIssue.bind(this);
+		this.showError = this.showError.bind(this);
+    	this.dismissToast = this.dismissToast.bind(this);
 	}
 
 	deleteIssue(id) {
@@ -112,12 +120,12 @@ export default class IssueList extends React.Component{
 				});
 			} else {
 				response.json().then(error => {
-			    	alert("Failed to add issue: " + error.message)
+			    	this.showError(`Не удалось добавить задачу: ${error.message}`);
 			    });
 			}
 		})
 		.catch(err => {
-			alert("Error in sending data to server: " + err.message);
+			this.showError(`Не удалось отправить данные на сервер: ${err.message}`);
 		});
 	}
 
@@ -150,14 +158,22 @@ export default class IssueList extends React.Component{
 			});
 			} else {
 				response.json().then(error => {
-			    	alert("Failed to fetch issues:" + error.message)
+			    	this.showError(`Не удалось получить задачи ${error.message}`);
 			    });
 			}
 		})
 		.catch(err => {
-			alert("Error in fetching data from server:", err);
+			this.showError(`Не удалось получить задачи с сервера: ${err}`);
 		});
   	}
+
+  	showError(message) {
+   		this.setState({ toastVisible: true, toastMessage: message, toastType:'danger' });
+	}
+	 
+	dismissToast() {
+	   this.setState({ toastVisible: false });
+	}
 
 	render(){
 		return(
@@ -167,7 +183,12 @@ export default class IssueList extends React.Component{
 				</Panel>
 		        <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue}/>
 		        <hr />
-		        <IssueAdd createIssue={this.createIssue}/>	
+		        <IssueAdd createIssue={this.createIssue}/>
+		        <Toast
+		          showing={this.state.toastVisible}
+		          message={this.state.toastMessage}
+		          onDismiss={this.dismissToast} 
+		          bsStyle={this.state.toastType} />
 			</div>
 		);
 	}

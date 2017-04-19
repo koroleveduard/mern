@@ -5,6 +5,7 @@ import { FormGroup, FormControl, ControlLabel, ButtonToolbar, Button,
   Panel, Form, Col, Alert } from 'react-bootstrap';
 import NumInput from './NumInput.jsx';
 import DateInput from './DateInput.jsx';
+import Toast from './Toast.jsx';
 
 export default class IssueEdit extends React.Component
 {
@@ -21,13 +22,19 @@ export default class IssueEdit extends React.Component
 		        created: null,
 		    },
 		    invalidFields: {},
-		    showingValidation: false
+		    showingValidation: false,
+		    toastVisible: false, 
+		    toastMessage: '', 
+		    toastType: 'success',
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onValidityChange = this.onValidityChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.dismissValidation = this.dismissValidation.bind(this);
 		this.showValidation = this.showValidation.bind(this);
+		this.showSuccess = this.showSuccess.bind(this);
+    	this.showError = this.showError.bind(this);
+    	this.dismissToast = this.dismissToast.bind(this);
 	}
 
 	onSubmit(event) {
@@ -52,17 +59,17 @@ export default class IssueEdit extends React.Component
 					}
 
 					this.setState({ issue: updatedIssue });
-					alert('Updated issue successfully.');
+					this.showSuccess('Задача обновлена.');
 				});
 			} else {
 				response.json()
 				.then(error => {
-					alert(`Failed to update issue: ${error.message}`);
+					this.showError(`Ошибка обновления: ${error.message}`);
 				});
 			}
 		})
 		.catch(err => {
-			alert(`Error in sending data to server: ${err.message}`);
+			this.showError(`Соединение с сервером отсутствует: ${err.message}`);
 		});
 	}
 
@@ -108,12 +115,12 @@ export default class IssueEdit extends React.Component
 				});
 			} else {
 				response.json().then(error => {
-				alert(`Failed to fetch issue: ${error.message}`);
+				this.showError(`Не удалось получить данные: ${error.message}`);
 			});
 		}
 		})
 		.catch(err => {
-			alert(`Error in fetching data from server: ${err.message}`);
+			alertthis.showError(`Не удалось получить данные с сервера: ${err.message}`);
 		});
 	}
 
@@ -124,6 +131,18 @@ export default class IssueEdit extends React.Component
 	dismissValidation() {
     	this.setState({ showingValidation: false });
   	}
+
+  	showSuccess(message) {
+    	this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
+	}
+
+	showError(message) {
+	    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
+	}
+
+	dismissToast() {
+		this.setState({ toastVisible: false });
+	}
 
 	render() {
 		const issue = this.state.issue;
@@ -211,7 +230,11 @@ export default class IssueEdit extends React.Component
           </FormGroup>
           <Link to="/issues">Вернуться назад</Link>
         </Form>
-			</Panel>
+        <Toast showing={this.state.toastVisible}
+			   message={this.state.toastMessage}
+          	   onDismiss={this.dismissToast} 
+          	   bsStyle={this.state.toastType} />
+		</Panel>
 		);
 	}
 }
