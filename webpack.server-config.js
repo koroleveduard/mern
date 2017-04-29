@@ -1,13 +1,15 @@
+var path = require('path');
+
 module.exports = {
   target: 'node',
   entry: './server/server.js',
   output: {
-    path: './dist',
+    path: path.resolve(__dirname, './dist'),
     filename: 'server.bundle.js',
     libraryTarget: 'commonjs',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
   externals: [/^[a-z]/],
   module: {

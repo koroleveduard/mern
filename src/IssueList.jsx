@@ -74,9 +74,17 @@ IssueTable.propTypes = {
 
 
 export default class IssueList extends React.Component{
+	static dataFetcher({ urlBase, location }) {
+	    return fetch(`${urlBase || ''}/api/issues${location.search}`).
+			   then(response => {
+					if (!response.ok) return response.json().then(error => Promise.reject(error));
+					return response.json().then(data => ({ IssueList: data }));
+				});
+	}
+
 	constructor(props, context){
 		super(props, context);
-		const issues = context.initialState.data.records;
+		const issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
 	    issues.forEach(issue => {
 	      issue.created = new Date(issue.created);
 	      if (issue.completionDate) {
@@ -122,24 +130,18 @@ export default class IssueList extends React.Component{
 	}
 
 	loadData() {
-		fetch(`/api/issues${this.props.location.search}`).then(response => {
-			if(response.ok){
-				response.json().then(data => {
-				console.log("Total count of records:", data._metadata.total_count);
-				data.records.forEach(issue => {
-					issue.created = new Date(issue.created);
-					if (issue.completionDate)
-	        			issue.completionDate = new Date(issue.completionDate);
-				});
-				this.setState({ issues: data.records });
+		IssueList.dataFetcher({ location: this.props.location })
+		.then(data => {
+			const issues = data.IssueList.records;
+			issues.forEach(issue => {
+				issue.created = new Date(issue.created);
+				if (issue.completionDate) {
+					issue.completionDate = new Date(issue.completionDate);
+				}
 			});
-			} else {
-				response.json().then(error => {
-			    	this.showError(`Не удалось получить задачи ${error.message}`);
-			    });
-			}
-		})
-		.catch(err => {
+
+			this.setState({ issues });
+		}).catch(err => {
 			this.showError(`Не удалось получить задачи с сервера: ${err}`);
 		});
   	}

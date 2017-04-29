@@ -17,17 +17,26 @@ renderedPageRouter.get('*', (req, res) => {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      fetch('http://localhost:3000/api/issues').then(response => (response.json()))
-      .then(data => {
-        const initialState = { data };
-        const html = renderToString(
-          <ContextWrapper initialState={initialState} >
-            <RouterContext {...renderProps} />
-          </ContextWrapper>
-        );
-        console.log('HTML', html);
-        res.status(200).send(template(html, initialState));
-      })
+  		const componentsWithData = renderProps.components.filter(c =>c.dataFetcher);
+      	const dataFetchers = componentsWithData.map(c => c.dataFetcher({
+        params: renderProps.params, location: renderProps.location,
+        urlBase: 'http://localhost:3000',
+      	}));
+
+      	Promise.all(dataFetchers).then((dataList) => {
+        	let initialState = {};
+        	dataList.forEach((namedData) => {
+          		initialState = Object.assign(initialState, namedData);
+        	});
+
+	        const html = renderToString(
+	          <ContextWrapper initialState={initialState} >
+	            <RouterContext {...renderProps} />
+	          </ContextWrapper>
+	        );
+	        
+	        res.status(200).send(template(html, initialState));
+      	})
       .catch(err => {
         console.log(`Error : ${err}`);
       });

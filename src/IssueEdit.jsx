@@ -9,12 +9,28 @@ import Toast from './Toast.jsx';
 
 export default class IssueEdit extends React.Component
 {
+	static dataFetcher({ params, urlBase }) {
+	    return fetch(`${urlBase || ''}/api/issues/${params.id}`)
+	    .then(response => {
+	      if (!response.ok) return response.json().then(error => Promise.reject(error));
+	      return response.json().then(data => ({ IssueEdit: data }));
+	    });
+  	}
+
 	constructor(props, context){
 		super(props, context);
-		const issue = context.initialState.data;
-    issue.created = new Date(issue.created);
-    issue.completionDate = issue.completionDate != null ?
-      new Date(issue.completionDate) : null;
+	    let issue;
+	    if (context.initialState.IssueEdit) {
+	      issue = context.initialState.IssueEdit;
+	      issue.created = new Date(issue.created);
+	      issue.completionDate = issue.completionDate != null ?
+	        new Date(issue.completionDate) : null;
+	    } else {
+	      issue = {
+	        _id: '', title: '', status: '', owner: '', effort: null,
+	        completionDate: null, created: null,
+	      };
+	    }
 		this.state = {
 			issue,
 		    invalidFields: {},
@@ -40,31 +56,14 @@ export default class IssueEdit extends React.Component
 			return;
 		}
 
-		fetch(`/api/issues/${this.props.params.id}`, 
-		{
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(this.state.issue),
-		})
-		.then(response => {
-			if (response.ok) {
-				response.json().then(updatedIssue => {
-					updatedIssue.created = new Date(updatedIssue.created);
-					if (updatedIssue.completionDate) {
-						updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-					}
-
-					this.setState({ issue: updatedIssue });
-					this.showSuccess('Задача обновлена.');
-				});
-			} else {
-				response.json()
-				.then(error => {
-					this.showError(`Ошибка обновления: ${error.message}`);
-				});
-			}
-		})
-		.catch(err => {
+		IssueEdit.dataFetcher({ params: this.props.params })
+    .then(data => {
+      const issue = data.IssueEdit;
+      issue.created = new Date(issue.created);
+      issue.completionDate = issue.completionDate != null ?
+        new Date(issue.completionDate) : null;
+      this.setState({ issue });
+		}).catch(err => {
 			this.showError(`Соединение с сервером отсутствует: ${err.message}`);
 		});
 	}
