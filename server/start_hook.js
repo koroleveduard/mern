@@ -1,5 +1,5 @@
 require('babel-register')({
-  presets: ['es2017-node7']
+  presets: ['es2017-node7','react']
 });
 
-require('./app.js');
+require('./server.js');

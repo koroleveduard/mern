@@ -1,13 +1,15 @@
+import SourceMapSupport from 'source-map-support';
+SourceMapSupport.install();
+import 'babel-polyfill';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import { MongoClient, ObjectID } from 'mongodb';
 import mongodb from 'mongodb';
 import Issue from './issue.js';
-import 'babel-polyfill';
-import SourceMapSupport from 'source-map-support';
-import path from 'path';
+import renderedPageRouter from './renderedPageRouter.jsx';
 
-SourceMapSupport.install();
+
 
 const app = express();
 app.use(express.static(__dirname+'/../static'));
@@ -155,6 +157,4 @@ app.post('/api/issues',(req,res) => {
   });
 });
 
-app.get('*',(req,res) => {
-  res.sendFile(path.resolve('static/index.html'));
-});
+app.use('/', renderedPageRouter);
