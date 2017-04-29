@@ -27,7 +27,8 @@
     "bootstrap": "^3.3.7",
     "express": "^4.15.2",
     "mongodb": "^2.2.25",
-    "source-map-support": "^0.4.14"
+    "source-map-support": "^0.4.14",
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
@@ -39,7 +40,6 @@
     "webpack": "^2.3.3",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.2",
-    "webpack-hot-middleware": "^2.18.0",
-    "whatwg-fetch": "^2.0.3"
+    "webpack-hot-middleware": "^2.18.0"
   }
 }
