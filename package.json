@@ -16,19 +16,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "body-parser": "^1.17.1",
+    "bootstrap": "^3.3.7",
+    "create-react-class": "^15.5.2",
+    "express": "^4.15.2",
+    "isomorphic-fetch": "^2.2.1",
+    "mongodb": "^2.2.25",
     "object-assign": "^4.1.0",
     "react": "^15.5.4",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.5.4",
     "react-router": "^2.7.0",
     "react-router-bootstrap": "^0.23.1",
-    "babel-polyfill": "^6.23.0",
-    "body-parser": "^1.17.1",
-    "bootstrap": "^3.3.7",
-    "express": "^4.15.2",
-    "mongodb": "^2.2.25",
-    "source-map-support": "^0.4.14",
-    "isomorphic-fetch": "^2.2.1"
+    "react-select": "^1.0.0-rc.3",
+    "source-map-support": "^0.4.14"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

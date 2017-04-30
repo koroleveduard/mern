@@ -5,7 +5,7 @@ module.exports = {
   context: path.resolve(__dirname, './client'),
   entry: {
     app: ['./Client.jsx'],
-    vendor: ['react','react-dom','isomorphic-fetch','react-router','react-bootstrap','react-router-bootstrap','babel-polyfill']
+    vendor: ['react','react-dom','isomorphic-fetch','react-router','react-bootstrap','react-router-bootstrap','babel-polyfill','react-select']
 
   },
   output: {
