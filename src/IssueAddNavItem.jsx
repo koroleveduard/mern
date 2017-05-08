@@ -2,23 +2,17 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { NavItem, Glyphicon, Modal, Form, FormGroup, FormControl,ControlLabel, Button, ButtonToolbar } from 'react-bootstrap';
 
-import Toast from './Toast.jsx';
-
 class IssueAddNavItem extends React.Component {
+
 constructor(props) {
   super(props);
   this.state = {
-    showing: false,
-    toastVisible: false, 
-    toastMessage: '', 
-    toastType: 'success',
+    showing: false
   };
 
   this.showModal = this.showModal.bind(this);
   this.hideModal = this.hideModal.bind(this);
   this.submit = this.submit.bind(this);
-  this.showError = this.showError.bind(this);
-  this.dismissToast = this.dismissToast.bind(this);
 }
 
 showModal() {
@@ -27,14 +21,6 @@ showModal() {
 
 hideModal() {
   this.setState({ showing: false });
-}
-
-showError(message) {
-  this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-}
-
-dismissToast() {
-  this.setState({ toastVisible: false });
 }
 
 submit(e) {
@@ -59,11 +45,11 @@ submit(e) {
   });
   } else {
     response.json().then(error => {
-    this.showError(`Failed to add issue: ${error.message}`);
+    this.props.showError(`Failed to add issue: ${error.message}`);
   });
   }
   }).catch(err => {
-    this.showError(`Error in sending data to server: ${err.message}`);
+    this.props.showError(`Error in sending data to server: ${err.message}`);
   });
 }
 render() {
@@ -93,10 +79,6 @@ return (
     </ButtonToolbar>
   </Modal.Footer>
   </Modal>
-  <Toast
-    showing={this.state.toastVisible} message={this.state.toastMessage}
-    onDismiss={this.dismissToast} bsStyle={this.state.toastType}
-  />
 </NavItem>
 );
 }
@@ -104,6 +86,7 @@ return (
 
 IssueAddNavItem.propTypes = {
   router: React.PropTypes.object,
+  showError: React.PropTypes.func.isRequired,
 };
 
 export default withRouter(IssueAddNavItem);

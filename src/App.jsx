@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router';
 import Select from 'react-select';
 import IssueAddNavItem from './IssueAddNavItem.jsx';
+import withToast from './withToast.jsx';
 
 const Header = (props) => {
 function searchIssues(input) {
@@ -55,7 +56,7 @@ return (
       </Col>
     <Col sm={3}>
     <Nav pullRight>
-      <IssueAddNavItem />
+      <IssueAddNavItem showError={props.showError} />
       <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret>
         <MenuItem>Logout</MenuItem>
       </NavDropdown>
@@ -65,9 +66,15 @@ return (
 );
 }
 
+Header.propTypes = {
+  showError: React.PropTypes.func.isRequired,
+};
+
+const HeaderWithToast = withToast(Header);
+
 const App = (props) => (
 	<div>
-		<Header />
+		<HeaderWithToast />
 	    <div className="container-fluid">
 	      {props.children}
 	    <hr/>

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel,Pagination } from 'react-bootstrap';
 
 import IssueFilter from './IssueFilter.jsx';
-import Toast from './Toast.jsx';
+import withToast from './withToast.jsx';
 
 const PAGE_SIZE = 10;
 
@@ -75,7 +75,7 @@ IssueTable.propTypes = {
 };
 
 
-export default class IssueList extends React.Component{
+class IssueList extends React.Component{
 	static dataFetcher({ urlBase, location }) {
 	    const query = Object.assign({}, location.query);
     const pageStr = query._page;
@@ -103,21 +103,16 @@ export default class IssueList extends React.Component{
 	    });
 		this.state = { 
 			issues,
-			toastVisible: false, 
-			toastMessage: '', 
-			toastType: 'success',
 			totalCount: data.metadata.totalCount,
 		};
 		this.setFilter = this.setFilter.bind(this);
 		this.deleteIssue = this.deleteIssue.bind(this);
-		this.showError = this.showError.bind(this);
-    	this.dismissToast = this.dismissToast.bind(this);
     	this.selectPage = this.selectPage.bind(this);
 	}
 
 	deleteIssue(id) {
 	    fetch(`/api/issues/${id}`, { method: 'DELETE' }).then(response => {
-	      if (!response.ok) alert('Failed to delete issue');
+	      if (!response.ok) this.props.showError('Не удалось удалить задачу');
 	      else this.loadData();
 	    });
   	}
@@ -160,17 +155,9 @@ export default class IssueList extends React.Component{
 
 			this.setState({ issues, totalCount: data.IssueList.metadata.totalCount });
 		}).catch(err => {
-			this.showError(`Не удалось получить задачи с сервера: ${err}`);
+			this.props.showError(`Не удалось получить задачи с сервера: ${err}`);
 		});
   	}
-
-  	showError(message) {
-   		this.setState({ toastVisible: true, toastMessage: message, toastType:'danger' });
-	}
-	 
-	dismissToast() {
-	   this.setState({ toastVisible: false });
-	}
 
 	render(){
 		return(
@@ -185,11 +172,6 @@ export default class IssueList extends React.Component{
 		          onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks
 		        />
 		        <hr />
-		        <Toast
-		          showing={this.state.toastVisible}
-		          message={this.state.toastMessage}
-		          onDismiss={this.dismissToast} 
-		          bsStyle={this.state.toastType} />
 			</div>
 		);
 	}
@@ -198,8 +180,14 @@ export default class IssueList extends React.Component{
 IssueList.propTypes = {
   location: React.PropTypes.object.isRequired,
   router: React.PropTypes.object,
+  showError: React.PropTypes.func.isRequired,
 };
 
 IssueList.contextTypes = {
   initialState: React.PropTypes.object,
 };
+
+const IssueListWithToast = withToast(IssueList);
+IssueListWithToast.dataFetcher = IssueList.dataFetcher;
+
+export default IssueListWithToast;
